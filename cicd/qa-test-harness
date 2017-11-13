@@ -19,7 +19,6 @@ for environment in "${environments[@]}"; do
       smoke)
         echo "  Performing smoke test"
         echo "  Simulating a failure verdict"
-        exit 3
         ;;
 
       integration)
