@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -eu
+set -xv
+
 echo "ENVS: $ENVS"
 
 echo "$0 called with $@"
@@ -15,6 +18,7 @@ for environment in "${environments[@]}"; do
 
       smoke)
         echo "  Performing smoke test"
+        echo "  Simulating a failure verdict"
         ;;
 
       integration)

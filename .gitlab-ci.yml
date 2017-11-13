@@ -5,6 +5,7 @@ image: gitlab.tools.in.pan-net.eu:4567/docker-images/docker-ansible
 stages:
   - setup
   - smoke
+  - review
   - qa
   - staging
   - deploy
@@ -20,11 +21,27 @@ setup_env:
     - echo "Setting up the ENV"
     - cicd/env-setup
 
+# ---- Sanity Testing ----
+
 smoke_test:
   stage: smoke
   script:
+    - export ENVS='smoke'
     - echo "Smoke testing the app"
     - cicd/qa-test-harness smoke
+
+# ---- Feature Development ----
+
+deploy_feature_review:
+  stage: review
+  script:
+    - echo "Deploying the review environment for review/$CI_COMMIT_REF_NAME"
+    - cicd/deploy review/$CI_COMMIT_REF_NAME
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    url:  http://review-board.ao.in.pan-net.eu/?id=
+  only:
+    - /feature\/.+/
 
 # ---- QA -----
 
@@ -33,9 +50,9 @@ deploy_qa:
   script:
     - export ENVS='ao-qa-ic-hrzagt1,ao-qa-ic-skbrab1'
     - echo "Deploy to $ENVS ($CI_JOB_NAME in $CI_JOB_STAGE)"
-    - cicd/deploy
+    - cicd/deploy qa
   environment:
-    name: qa-deploy
+    name: qa
     url:  https://ao-qa-ic-hrzagt1.ao.in.pan-net.eu/status
   only:
     - develop
@@ -43,10 +60,11 @@ deploy_qa:
 integration_test:
   stage: qa
   script:
+    - export ENVS="ao-qa-ic-skbrab1"
     - echo "Invoking systems test ($CI_JOB_NAME in $CI_JOB_STAGE)"
     - cicd/qa-test-harness integration
   environment:
-    name: qa-cit-status
+    name: qa/cit/status/$CI_COMMIT_REF_NAME
     url:  https://ao-qa-ic-hrzagt1.ao.in.pan-net.eu/status?id=cit
   only:
     - develop
@@ -58,7 +76,7 @@ systems_test:
     - echo "Invoking systems test ($CI_JOB_NAME in $CI_JOB_STAGE)"
     - cicd/qa-test-harness system
   environment:
-    name: qa-st-status
+    name: qa/st/status/$CI_COMMIT_REF_NAME
     url:  https://ao-qa-ic-hrzagt1.ao.in.pan-net.eu/status?id=sit
   only:
     - develop
@@ -70,12 +88,13 @@ deploy_staging:
   script:
     - export ENVS='ao-stag-ic-hrzagt1,ao-stag-ic-skbrab1'
     - echo "Deploy to $ENVS ($CI_JOB_NAME in $CI_JOB_STAGE)"
-    - cicd/deploy
+    - cicd/deploy staging
   environment:
     name: staging
     url:  https://ao-stag-ic-hrzagt1.ao.in.pan-net.eu/status
   only:
-    - master
+    - /release\/.+/
+    - /hotfix\/.+/
 
 regression_test:
   stage: staging
@@ -84,10 +103,11 @@ regression_test:
     - echo "Invoking systems test ($CI_JOB_NAME in $CI_JOB_STAGE)"
     - cicd/qa-test-harness rt
   environment:
-    name: qa-cit-status
+    name: qa/rt/status
     url:  https://dashboard.ao.in.pan-net.eu/status?id=staging
   only:
-    - develop
+    - /release\/.+/
+    - /hotfix\/.+/
 
 end2end_test:
   stage: staging
@@ -96,10 +116,25 @@ end2end_test:
     - echo "Invoking systems test ($CI_JOB_NAME in $CI_JOB_STAGE)"
     - cicd/qa-test-harness e2e
   environment:
-    name: qa-cit-status
+    name: qa/e2e/$CI_COMMIT_REF_NAME
     url:  https://dashboard.ao.in.pan-net.eu/status?id=staging
   only:
-    - develop
+    - /release\/.+/
+    - /hotfix\/.+/
+
+# ---- Release ----
+
+deploy_release_review:
+  stage: review
+  script:
+    - echo "Deploying the review environment for review/$CI_COMMIT_REF_NAME"
+    - cicd/deploy review/$CI_COMMIT_REF_NAME
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    url:  http://review-board.ao.in.pan-net.eu/?id=
+  only:
+    - /release\/.+/
+  when: manual
 
 # ---- Production -----
 
@@ -108,7 +143,7 @@ deploy_production:
   script:
     - export ENVS='ao-prod-ic-hrzagt1,ao-prod-ic-hrbudb1,ao-prod-ic-plwarb1,ao-prod-ic-skbrab1'
     - echo "Deploy to $ENVS ($CI_JOB_NAME in $CI_JOB_STAGE)"
-    - cicd/deploy
+    - cicd/deploy $CI_ENVIRONMENT_NAME
   environment:
     name: production
     url:  https://dashboard.ao.in.pan-net.eu/status?id=production
