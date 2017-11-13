@@ -57,6 +57,7 @@ deploy_qa:
 integration_test:
   stage: qa
   script:
+    - export ENVS="ao-qa-ic-skbrab1"
     - echo "Invoking systems test ($CI_JOB_NAME in $CI_JOB_STAGE)"
     - cicd/qa-test-harness integration
   environment:
