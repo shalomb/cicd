@@ -35,10 +35,10 @@ smoke_test:
 deploy_feature_review:
   stage: review
   script:
-    - echo "Deploying the review environment for feature_review/$CI_COMMIT_REF_NAME"
-    - cicd/deploy feature_review/$CI_COMMIT_REF_NAME
+    - echo "Deploying the review environment for review/$CI_COMMIT_REF_NAME"
+    - cicd/deploy review/$CI_COMMIT_REF_NAME
   environment:
-    name: feature_review/$CI_COMMIT_REF_NAME
+    name: review/$CI_COMMIT_REF_NAME
     url:  http://review-board.ao.in.pan-net.eu/?id=
   only:
     - /feature\/.+/
@@ -127,10 +127,10 @@ end2end_test:
 deploy_release_review:
   stage: review
   script:
-    - echo "Deploying the review environment for release_review/$CI_COMMIT_REF_NAME"
-    - cicd/deploy release_review/$CI_COMMIT_REF_NAME
+    - echo "Deploying the review environment for review/$CI_COMMIT_REF_NAME"
+    - cicd/deploy review/$CI_COMMIT_REF_NAME
   environment:
-    name: release_review/$CI_COMMIT_REF_NAME
+    name: review/$CI_COMMIT_REF_NAME
     url:  http://review-board.ao.in.pan-net.eu/?id=
   only:
     - /release\/.+/
