@@ -1,0 +1,11 @@
+86c6c21 Merge branch 'feature/improved-ci' into develop
+2b0192c Improve review environment naming
+ee07a4d Fixing failing test
+cb153f3 Add env for smoke testenv
+89cd62d Set env for the QA environment
+ef424b0 Improve CI process
+0eb33a4 Merge branch 'feature/add-gitignore' into develop
+8f43e66 Introduce a feature branch failure
+108b809 Add .gitignore
+40c8c99 Add gitflow CI/CD PoC
+fd52519 add README
