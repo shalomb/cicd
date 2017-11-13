@@ -21,9 +21,12 @@ setup_env:
     - echo "Setting up the ENV"
     - cicd/env-setup
 
+# ---- Sanity Testing ----
+
 smoke_test:
   stage: smoke
   script:
+    - export ENVS='smoke'
     - echo "Smoke testing the app"
     - cicd/qa-test-harness smoke
 
