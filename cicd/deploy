@@ -4,4 +4,13 @@ echo "ENVS: $ENVS"
 
 echo "$0 called with $@"
 
+echo ""
 
+IFS=',' read -a environments <<<"$ENVS"
+for environment in "${environments[@]}"; do
+
+  echo "In environment: $environment"
+  echo "  Deploying: $@"
+  echo ""
+
+done
