@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo "ENVS: $ENVS"
+
+echo "$0 called with $@"
+
+

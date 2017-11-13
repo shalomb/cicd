@@ -1,0 +1,118 @@
+---
+
+image: gitlab.tools.in.pan-net.eu:4567/docker-images/docker-ansible
+
+stages:
+  - setup
+  - smoke
+  - qa
+  - staging
+  - deploy
+
+before_script:
+  - echo "Running $CI_JOB_NAME in stage $CI_JOB_STAGE"
+  - env | sort | tee /tmp/$CI_JOB_STAGE-$CI_JOB_NAME.env
+  - pwd; pwd -P;
+
+setup_env:
+  stage: setup
+  script:
+    - echo "Setting up the ENV"
+    - cicd/env-setup
+
+smoke_test:
+  stage: smoke
+  script:
+    - echo "Smoke testing the app"
+    - cicd/qa-test-harness smoke
+
+# ---- QA -----
+
+deploy_qa:
+  stage: qa
+  script:
+    - export ENVS='ao-qa-ic-hrzagt1,ao-qa-ic-skbrab1'
+    - echo "Deploy to $ENVS ($CI_JOB_NAME in $CI_JOB_STAGE)"
+    - cicd/deploy
+  environment:
+    name: qa-deploy
+    url:  https://ao-qa-ic-hrzagt1.ao.in.pan-net.eu/status
+  only:
+    - develop
+
+integration_test:
+  stage: qa
+  script:
+    - echo "Invoking systems test ($CI_JOB_NAME in $CI_JOB_STAGE)"
+    - cicd/qa-test-harness integration
+  environment:
+    name: qa-cit-status
+    url:  https://ao-qa-ic-hrzagt1.ao.in.pan-net.eu/status?id=cit
+  only:
+    - develop
+
+systems_test:
+  stage: qa
+  script:
+    - export ENVS='ao-qa-ic-skbrab1'
+    - echo "Invoking systems test ($CI_JOB_NAME in $CI_JOB_STAGE)"
+    - cicd/qa-test-harness system
+  environment:
+    name: qa-st-status
+    url:  https://ao-qa-ic-hrzagt1.ao.in.pan-net.eu/status?id=sit
+  only:
+    - develop
+
+# ---- Staging -----
+
+deploy_staging:
+  stage: staging
+  script:
+    - export ENVS='ao-stag-ic-hrzagt1,ao-stag-ic-skbrab1'
+    - echo "Deploy to $ENVS ($CI_JOB_NAME in $CI_JOB_STAGE)"
+    - cicd/deploy
+  environment:
+    name: staging
+    url:  https://ao-stag-ic-hrzagt1.ao.in.pan-net.eu/status
+  only:
+    - master
+
+regression_test:
+  stage: staging
+  script:
+    - export ENVS='ao-stag-ic-hrzagt1,ao-stag-ic-skbrab1'
+    - echo "Invoking systems test ($CI_JOB_NAME in $CI_JOB_STAGE)"
+    - cicd/qa-test-harness rt
+  environment:
+    name: qa-cit-status
+    url:  https://dashboard.ao.in.pan-net.eu/status?id=staging
+  only:
+    - develop
+
+end2end_test:
+  stage: staging
+  script:
+    - export ENVS='ao-stag-ic-hrzagt1,ao-stag-ic-skbrab1'
+    - echo "Invoking systems test ($CI_JOB_NAME in $CI_JOB_STAGE)"
+    - cicd/qa-test-harness e2e
+  environment:
+    name: qa-cit-status
+    url:  https://dashboard.ao.in.pan-net.eu/status?id=staging
+  only:
+    - develop
+
+# ---- Production -----
+
+deploy_production:
+  stage: deploy
+  script:
+    - export ENVS='ao-prod-ic-hrzagt1,ao-prod-ic-hrbudb1,ao-prod-ic-plwarb1,ao-prod-ic-skbrab1'
+    - echo "Deploy to $ENVS ($CI_JOB_NAME in $CI_JOB_STAGE)"
+    - cicd/deploy
+  environment:
+    name: production
+    url:  https://dashboard.ao.in.pan-net.eu/status?id=production
+  when: manual
+  only:
+    - master
+

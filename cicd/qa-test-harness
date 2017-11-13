@@ -1,0 +1,39 @@
+#!/bin/bash
+
+echo "ENVS: $ENVS"
+
+echo "$0 called with $@"
+
+IFS=',' read -a environments <<<"$ENVS"
+
+for environment in "${environments[@]}"; do
+
+  echo "In environment: $environment"
+
+  for test; do
+    case "$test" in
+
+      smoke)
+        echo "  Performing smoke test"
+        ;;
+
+      integration)
+        echo "  Performing integration test"
+        ;;
+
+      system)
+        echo "  Performing systems test"
+        ;;
+
+      rt)
+        echo "  Performing full regression test"
+        ;;
+
+      e2e)
+        echo "  Performing full regression test"
+        ;;
+
+      esac
+    done
+done
+
