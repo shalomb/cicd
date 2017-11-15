@@ -1,0 +1,29 @@
+---
+
+file:
+  /etc/group:
+    exists: true
+    owner: root
+    group: root
+    filetype: file
+  /etc/passwd:
+    exists: true
+    owner: root
+    group: root
+    filetype: file
+    contains: []
+  /etc/ssh:
+    exists: true
+    owner: root
+    group: root
+    filetype: directory
+    contains: []
+
+package:
+  git:
+    installed: true
+
+service:
+  ls:
+    enabled: false
+    running: false

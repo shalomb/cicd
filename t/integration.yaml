@@ -1,0 +1,17 @@
+package:
+  git:
+    installed: true
+
+command:
+  "echo Compiling assembly":
+    exit-status: 0
+  "echo testing component A":
+    exit-status: 0
+  "echo testing component B":
+    exit-status: 0
+  "echo testing component C":
+    exit-status: 0
+  "echo testing component D":
+    exit-status: 0
+  "echo testing component E":
+    exit-status: 0
