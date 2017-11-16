@@ -1,0 +1,22 @@
+---
+
+file:
+
+  /etc/passwd:
+    exists: true
+    mode: "0644"
+    owner: root
+    group: root
+    filetype: file
+    contains: []
+
+  bin/engine:
+    exists: true
+    mode: "0755"
+
+command:
+  "echo foo":
+    exit-status: 1
+
+# vim:ft=yaml
+
