@@ -1,0 +1,108 @@
+file:
+  /etc/passwd:
+    exists: true
+    mode: "0644"
+    owner: root
+    group: root
+    filetype: file
+    contains: []
+  /etc/ssh:
+    exists: true
+    mode: "0755"
+    size: 225
+    owner: root
+    group: root
+    filetype: directory
+    contains: []
+  /etc/ssh/sshd_config:
+    exists: true
+    mode: "0644"
+    size: 3271
+    owner: root
+    group: root
+    filetype: file
+    contains: []
+  /home/unop/.ssh/authorized_keys:
+    exists: true
+    mode: "0600"
+    size: 946
+    owner: unop
+    group: unop
+    filetype: file
+    contains: []
+  /home/unop/.ssh/config:
+    exists: true
+    mode: "0644"
+    size: 1086
+    owner: unop
+    group: unop
+    filetype: file
+    contains: []
+  /usr/local/bin/ansible:
+    exists: true
+    mode: "0755"
+    size: 4879
+    owner: root
+    group: staff
+    filetype: file
+    contains: []
+  /usr/local/bin/ansible-connection:
+    exists: true
+    mode: "0755"
+    size: 13580
+    owner: root
+    group: staff
+    filetype: file
+    contains: []
+  /usr/local/bin/ansible-console:
+    exists: true
+    mode: "0755"
+    size: 4879
+    owner: root
+    group: staff
+    filetype: file
+    contains: []
+  /usr/local/bin/ansible-playbook:
+    exists: true
+    mode: "0755"
+    size: 4879
+    owner: root
+    group: staff
+    filetype: file
+    contains: []
+package:
+  python-pip:
+    installed: true
+    versions:
+    - 9.0.1-2
+service:
+  ssh:
+    enabled: true
+    running: true
+  sshd:
+    enabled: true
+    running: true
+user:
+  sshd:
+    exists: true
+    uid: 106
+    gid: 65534
+    groups:
+    - nogroup
+    home: /run/sshd
+    shell: /usr/sbin/nologin
+group:
+  ssh:
+    exists: true
+    gid: 110
+command:
+  echo foo:
+    exit-status: 1
+    stdout: []
+    stderr: []
+    timeout: 0
+process:
+  ssh:
+    running: true
+  sshd:
+    running: true

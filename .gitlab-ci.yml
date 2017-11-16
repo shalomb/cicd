@@ -14,6 +14,8 @@ before_script:
   - echo "Running $CI_JOB_NAME in stage $CI_JOB_STAGE"
   - env | sort | tee /tmp/$CI_JOB_STAGE-$CI_JOB_NAME.env
   - pwd; pwd -P;
+  - wget -c https://github.com/aelsabbahy/goss/releases/download/v0.3.5/goss-linux-amd64 -O /usr/local/bin/goss
+  - chmod +x /usr/local/bin/goss
 
 setup_env:
   stage: setup

@@ -10,6 +10,10 @@ file:
     filetype: file
     contains: []
 
+  bin/engine:
+    exists: true
+    mode: "0755"
+
 command:
   "echo foo":
     exit-status: 1

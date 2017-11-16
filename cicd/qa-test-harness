@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set -eu
-set -xv
 
 echo "ENVS: $ENVS"
 
@@ -14,11 +13,11 @@ for environment in "${environments[@]}"; do
   echo "In environment: $environment"
 
   for test; do
+
     case "$test" in
 
       smoke)
         echo "  Performing smoke test"
-        echo "  Simulating a failure verdict"
         ;;
 
       integration)
@@ -38,6 +37,9 @@ for environment in "${environments[@]}"; do
         ;;
 
       esac
+
+      goss --gossfile t/"$test".yaml validate --format tap
+
     done
 done
 

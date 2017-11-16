@@ -1,0 +1,13 @@
+command:
+  "echo Excuting test case 1":
+    exit-status: 0
+  "echo Excuting test case 2":
+    exit-status: 0
+  "echo Excuting test case 3":
+    exit-status: 0
+  "echo Excuting test case 4":
+    exit-status: 1
+  "echo Excuting test case 5":
+    exit-status: 0
+  "echo Excuting test case 6":
+    exit-status: 0
